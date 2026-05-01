@@ -1,8 +1,31 @@
+---
+name: ruins-generator
+description: |
+  Generate Ruins (cognitive excretion) when a conversation produces genuine
+  breakthroughs. Not for information retrieval or routine Q&A. Flat storage,
+  no maintenance, write-once bury-forever.
+category: user
+---
+
 # Skill: Ruins Generator
 
 ## 触发条件
+
 只有对话中出现了**认知突破**（而非信息获取）时，才生成 Ruins。
 如果只是查了个资料、弄清了个操作，不生成。
+
+### 判定 vs 选择
+
+生成 Ruins 是一个**判定**，不是一个选项。不要问用户"要不要生成一份 Ruins"。
+
+正确做法：基于对话内容自行判定是否有认知突破，然后直接执行或说明理由。
+
+| 错误 | 正确 |
+|---|---|
+| "要不要生成一份 Ruins?" | "这次对话有认知突破吗?"（判定后执行） |
+| "是否要生成一份总结?" | [如果用户有系统，请求用户的评估] |
+
+用户纠正信号：当用户说"你总结得不好"或"为什么你没有调用 skill"时，说明你在凭惯性输出，没有先查技能系统。
 
 ## 存放位置
 `98-Logs/`
