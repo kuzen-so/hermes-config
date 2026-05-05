@@ -21,21 +21,30 @@ vision:
 
 ## 解决
 
-需要配置具体的 vision provider 和 API key：
+配置 auxiliary vision provider（不是顶层 `vision` 段）：
 
 ```bash
-hermes config set vision.provider openai
-hermes config set vision.model gpt-4o
-hermes config set vision.api_key $OPENAI_API_KEY
+hermes config set auxiliary.vision.provider openrouter
+hermes config set auxiliary.vision.model anthropic/claude-sonnet-4
 ```
 
 或：
 
 ```bash
-hermes config set vision.provider google
-hermes config set vision.model gemini-pro-vision
-hermes config set vision.api_key $GOOGLE_API_KEY
+hermes config set auxiliary.vision.provider google
+hermes config set auxiliary.vision.model gemini-2.5-flash
 ```
+
+**关键：API key 必须在 `.env` 文件或环境变量中可用。**
+
+仅设置 provider/model 不够。若报错 "No LLM provider configured for task=vision provider=X"，说明 key 未找到。检查：
+
+```bash
+grep OPENROUTER_API_KEY ~/.hermes/.env
+grep GOOGLE_API_KEY ~/.hermes/.env
+```
+
+若为空或被注释，填入 key 后重新测试。
 
 ## 影响
 
@@ -46,10 +55,19 @@ hermes config set vision.api_key $GOOGLE_API_KEY
 ## 检测
 
 ```bash
-hermes tools list | grep vision
+hermes config | grep -A 5 "auxiliary:"
 ```
 
-若显示 `✓ enabled vision` 但无法解析图片，检查 config.yaml 的 vision 段。
+检查 `auxiliary.vision` 段，不是顶层 `vision`。
+
+## 平台自动解析回退
+
+当 `browser_vision` 或 `vision_analyze` 工具不可用时，消息平台（如微信）可能自带图片解析能力，自动提取图像内容注入对话上下文。这不是 AI vision 工作，而是平台预处理。若看到 "[The user sent an image~ Here's what I can see...]" 但自己没有调用 vision 工具，说明平台已解析，可直接使用其输出。
+
+## 相关
+
+- `hermes-agent` 技能的 Toolsets 表格：`vision` 是独立 toolset，但实际由 `auxiliary.vision` 配置驱动
+- 配置文档：https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 
 ## 相关
 
