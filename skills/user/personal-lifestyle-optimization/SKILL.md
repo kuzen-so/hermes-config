@@ -190,6 +190,9 @@ If genuinely crashing (shaking, can't work, no protein available):
 - Oily skin: replace occlusives with humectants/light emulsions
 - Acid nights: apply acid → wait 10 min → thick moisturizer layer (B5) → 15 min → blot excess → sleep
 - **B5 thick mask protocol**: apply white-visible layer, not thin transparent coat; wait 15 min; wipe with damp towel; leave thin residue; do not rinse
+- **Azelaic acid + B5 stacking order**: apply azelaic acid → wait 5-10 min until completely dry → then apply B5. Do NOT apply B5 while acid is still wet. Wet stacking increases acid penetration depth and irritation risk. Azelaic acid pH is ~3.5-4.5; B5 is a humectant/occlusive. Wet occlusion traps acid in moist environment → faster, deeper penetration → stinging/itching.
+- **Azelaic acid tolerance build-up**: Week 1: every other day, spot application (T-zone / acne areas only). Week 2: daily if no irritation. If itching/stinging occurs at any stage, step back to previous frequency. Do not push through irritation.
+- **Itch emergency protocol**: If face itches after routine → stop azelaic acid tonight, cleanse + thin layer of B5 only. If still itchy tomorrow → stop B5 too, cleanse only for 1-2 days until barrier recovers. Then restart azelaic acid at lower frequency/spot application.
 - Cleanser: amino acid based for oily skin, not soap/foaming
 - **Product idle handling**: occlusive creams (squalane) → save for peeling/winter/body use, not daily face for oily skin
 - **Hand hygiene**: dirty hands touch face → bacteria/oil transfer → worse acne and oil
