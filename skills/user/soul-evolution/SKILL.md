@@ -719,10 +719,7 @@ SOUL.md 中"我"和"你"的指代必须全文一致。
 
 ## 9. 相关支持文件
 
-| `references/kimi-system-prompt-behavior.md` — Kimi 模型 system_prompt 被忽略的行为异常及 SOUL.md 兜底方案
-| `references/obsidian-structure-tracking.md` — Obsidian 目录结构追踪规范，用于回答"我的 XX 记录在哪"
-| `references/user-state-machine.md` — 用户状态机（日常/思考/工作）及 AI 行为切换规则
 | `references/research-audit-example.md` — 本次 4 万字科学审计报告的 P0/P1/P2 提取示例
-| `references/github-push-failure-2026-05-10.md` — GitHub 推送失败案例：仓库不存在时的排查路径
-| `references/spontaneous-maintenance-philosophy.md` — 用户自发维护哲学：零意志力消耗，成果驱动验证
-| `references/soul-three-part-structure.md` — SOUL 三分法结构规范：Persona / 成长系统 / 系统偏好
+|- `references/github-push-failure-2026-05-10.md` — GitHub 推送失败案例：仓库不存在时的排查路径
+|- `references/spontaneous-maintenance-philosophy.md` — 用户自发维护哲学：零意志力消耗，成果驱动验证
+|- `references/soul-three-part-structure.md` — SOUL 三分法结构规范：Persona / 成长系统 / 系统偏好
