@@ -68,3 +68,16 @@ tags: [productivity, writing, report, freelancer]
 1. 复制当前 skill 到 `~/Documents/Obsidian/weekly-report.md`
 2. 用户在 Obsidian 修改
 3. 用户说"同步" → 覆盖回 `~/.hermes/skills/user/weekly-report/SKILL.md`
+
+## Skill 创建纪律
+
+**创建 skill 前必须确认**：用户明确说"以后创建 skill 前先跟你确认"
+
+判断标准：
+- 有触发条件？
+- 有执行步骤？
+- 有输出产物？
+- 三个都是 yes → 可以创建
+- 任一 no → 进 SOUL.md 或 memory
+
+参考：`references/skill-boundary-discipline.md`（content-factory skill 下）
