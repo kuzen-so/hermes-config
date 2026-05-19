@@ -53,6 +53,39 @@ User's settled creative production toolchain. **Decisions are final — do not r
 
 **Decision criteria used**: Memory footprint > feature depth. User explicitly rejected Eagle for resource usage and Billfish for being abandoned.
 
+### Pixcall Boundaries (Hard Rules)
+
+User explicitly defined: **"图库就是图库，不能放视频，只能是静态的"**
+
+| In Pixcall | NOT in Pixcall |
+|------------|----------------|
+| JPG / PNG / HEIC | MP4 / MOV (any video with audio/progress bar) |
+| GIF (looping, no audio) | Course videos / tutorials |
+| SVG / vector files | Screen recordings / live streams |
+| 3D models (glb / gltf / obj) | |
+| Design source files (PSD / AI / Figma) | |
+
+**Rationale**: Pixcall is a **visual-first asset manager**, not a media manager. Videos break the "one-glance scan" workflow. GIFs count as static because they loop without audio controls. Videos belong in `Reel` (video library), managed separately.
+
+### Local Folder Structure
+
+```
+Ref/           # 图库 — static visual assets (managed by Pixcall)
+  素材/         # Reusable: textures, icons, illustrations
+  参考/         # Inspiration: color, composition, style
+  作品/         # Own output: design drafts, renders
+  模型/         # 3D assets: glb, obj, fbx
+
+Reel/          # 视频库 — dynamic media (NOT in Pixcall)
+  课程/         # Learning content
+  素材/         # Editable clips
+  存档/         # Raw footage, cold storage
+```
+
+**Naming**: `Ref` + `Reel` — 3-letter parity, professional, clear boundary. Chinese alternatives rejected for being too generic (素材/资源 mix up image and video).
+
+**macOS reality**: System folders (Downloads, Pictures, 影片, 桌面) are in Chinese and protected. Custom folders use English. Accept the mix — don't fight it.
+
 ## Video / Movie Management
 
 | Tool | Status | Use Case |
@@ -115,7 +148,14 @@ User's decision criteria when evaluating creative tools:
 | HamHub / VidHub | Niche immature alternatives; ecosystem and long-term support risk |
 | Google Drive (primary media storage) | Slow upload from China, expensive, not optimized for video streaming |
 
-## Key Principle
+## macOS System Folder Notes
+
+- System folders (Downloads, Pictures, 影片, 桌面, 文稿, 公共, 应用程序) are in Chinese and **cannot be renamed**.
+- Custom user folders use English — accept the mix.
+- **Downloads is system-protected**: the "Locked" checkbox in Get Info is greyed out and cannot be toggled. Cannot delete, move, or rename via Finder.
+  - To change default download location: Safari Settings → General → File download location.
+  - To bypass for file operations: use Terminal (`mv`, `rm`, etc.) or change app-specific download paths.
+- **Pictures vs Ref**: Pictures = system default for camera/phone imports. Ref = user-curated design assets managed by Pixcall. Keep both, know the boundary.
 
 User evaluated all options hands-on and made final choices. **Do not suggest alternatives** ("have you tried X?"). The stack is settled.
 
