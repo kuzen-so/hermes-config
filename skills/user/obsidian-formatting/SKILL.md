@@ -1,0 +1,156 @@
+---
+name: obsidian-formatting
+description: Obsidian 文档排版工作流。自动添加标题序号、删除多余空行、扫描错别字、检查失效链接。
+trigger: 用户说"排版"、"格式化"、"整理格式"、"Obsidian 排版"、"格式化文档"、"整理文档格式"、"文档排版"时加载
+---
+
+# Obsidian Formatting — 文档排版工作流
+
+## 核心原则
+
+- 格式统一 > 单篇精美
+- 自动化 > 手动调整
+- 不改内容，只改形式
+- **自动执行区直接写入，询问区等用户确认**
+- **重新提问时先检查**：用户重复问或重新提某个问题时，先检查当前状态/文件/记录，再回答。不假设、不凭记忆、不直接给之前的结论
+- **废话少**：只说结论，不展开；一句话代替表格；停止代替反问；删掉"原因是""问题在于"
+
+## 执行步骤
+
+### 1. 接收指令
+
+用户说"排版"时，问：
+
+```
+加载了 obsidian-formatting skill。
+
+目标是什么？
+- 单篇文件 → 给我文件路径
+- 批量处理 → 给我目录路径
+- 当前对话内容 → 粘贴文本
+```
+
+### 2. 读取文件
+
+按用户给出的路径读取文件。
+
+### 3. 自动执行区
+
+触发后直接执行，无需确认：
+
+| 检查项 | 标准 | 修复动作 |
+|--------|------|---------|
+| 标题序号 | 按层级递增（1. / 1.1 / 1.1.1） | 自动添加 |
+| 空行 | 同类小标题间删除，段落/代码块前后保留 | 自动删除多余空行 |
+| 代码块 | 无语言标识的代码块 | 自动补充 `text` 或 `bash` |
+| 失效链接 | 内部链接 `[[ ]]`、外部链接 `[ ]( )`、图片链接 `![]( )` | 自动联网验证，标出状态 |
+
+**联网验证链接：** 使用 `execute_code` + `urllib.request` 对每个外部链接发送 HEAD 请求，检查 HTTP 状态码：
+- 200 → 有效
+- 404/403/500 → 失效，标出
+- 超时/异常 → 无法访问
+
+**执行 write_file：** 自动修改完成后，立即调用 `write_file` 将修改后的内容写入原文件路径。不询问用户，直接写入。
+
+### 4. 询问区
+
+扫描后标出，等用户确认：
+
+| 检查项 | 标准 | 处理方式 |
+|--------|------|---------|
+| 错别字 | 扫描全文 | 标出疑似错误，不自动修改。不确定时写"无"，不瞎报 |
+| 失效链接 | 内部链接 `[[ ]]`、外部链接 `[ ]( )` | 标出疑似失效链接，不自动修改。外部图片链接标记"无法本地验证" |
+
+### 5. 汇报
+
+向用户汇报：
+
+```
+排版检查结果：
+
+[自动修改]
+- 标题序号：已添加 H1→1. / H2→1.1 / H3→1.1.1
+- 空行：已删除 X 处多余空行
+- 代码块：已补充 X 个语言标识
+
+[待确认]
+- 错别字：
+  | 位置 | 原文 | 建议改为 | 说明 |
+  |------|------|---------|------|
+  | 第X行 | xxx | xxx | 疑似错字 |
+
+- 失效链接：
+  | 位置 | 链接 | 状态 |
+  |------|------|------|
+  | 第X行 | [[xxx]] | 目标文件不存在 |
+```
+
+**写入规则：**
+- 自动修改区：直接写入文件，不询问用户
+- 待确认区：只标出，不修改，等用户后续指令
+- 用户说"修复错别字"或"修复链接"时，执行对应修改
+- 用户说"全部修复"时，修复待确认区所有项
+- 用户说"否"时，不写入待确认区的修改
+
+## 陷阱
+
+- **误报错别字**：不确定的命令、术语、品牌名不要标为错别字。写"无"比瞎报好。
+- **外部链接误标**：外部图片链接（raw.githubusercontent.com 等）标记"无法本地验证"，不要标为"失效"。
+- **标题序号冲突**：原文已有序号（如一、二、三或 2.1 / 3.1）时，统一改为数字层级（1. / 1.1 / 1.1.1）。
+- **用户直接给路径时跳过询问**：用户消息直接包含文件路径（如"排版 /path/to/file.md"）时，直接读取该路径，不询问"目标是什么？"。
+- **触发后问目标**：不要直接问"文件绝对路径？"，而是问"目标是什么？"给三个选项（单篇/批量/粘贴）。
+- **重新提问时先检查**：用户重复问或重新提某个问题时，先检查当前状态/文件/记录，再回答。不假设、不凭记忆、不直接给之前的结论。
+- **用户说"写进"等于确认**：用户说"写进"、"写入"、"保存"等明确指令时，直接执行 write_file，不需要再问"确定吗？"或"要写入吗？"。用户已经确认。
+- **废话少**：用户说"我怎么感觉你现在废话很多" → 纠正：只说结论，不展开；一句话代替表格；停止代替反问；删掉"原因是""问题在于"
+
+## Vault 管理提示
+
+Obsidian vaults may live in alternate locations. If the default path has no markdown files, search under Documents for directories matching the vault name.
+
+### Config file syncing
+Users sometimes want to edit Hermes personality or configuration files inside Obsidian for convenience. The general pattern is:
+1. Copy or move the config file into the Obsidian vault.
+2. Leave a symlink at the original location so the application can still find it.
+3. Verify the symlink resolves correctly afterward.
+
+### Active vault safety
+Obsidian maintains internal link indexes and file watchers. **Never use `mv`, `rm`, or Finder-mediated moves/renames on vault directories while Obsidian is running.** Doing so breaks graph links, backlinks, and recent file history.
+
+**Correct approaches:**
+1. Ask the user to close Obsidian first, then use `mv`/`rm`.
+2. Or let the user rename/move within Obsidian's own UI.
+3. If the user says "don't modify" mid-operation, stop immediately.
+
+### Safe directory migration
+If the folder contains externally-referenced symlinks (e.g., `~/.hermes/SOUL.md -> ~/Documents/Obsidian/13-Hermes/SOUL.md`), `mv` or Finder rename will break the symlink. The safe sequence is:
+1. Create the new directory
+2. Copy files into it
+3. Recreate internal symlinks inside the new directory
+4. **Update external symlinks** that pointed to the old location
+5. Update any hardcoded paths inside copied files
+6. Verify everything resolves correctly
+7. Only then remove the old directory
+
+### Chinese-character path handling
+When working with Chinese-named directories inside Obsidian vaults, some tools mishandle Unicode path arguments:
+- **write_file**: fails on paths containing Chinese characters. Workaround: use `terminal` with shell redirection or `execute_code` with Python file I/O.
+- **terminal mkdir/rmdir**: creating or deleting Chinese-named directories via `terminal` may produce `uXXXX` garbled folder names. **Always use `execute_code` with Python `os.makedirs()` / `shutil.rmtree()` for Chinese directory operations.**
+- **terminal direct arguments**: Chinese characters in path arguments may get incorrectly escaped. Workarounds: use wildcards (`ls 03-*`), `cd` into parent first, or use `execute_code` with Python `pathlib`/`os`.
+
+### Common vault paths
+- ~/Documents/Obsidian Vault (default)
+- ~/Documents/Obsidian (common alternate)
+
+## 参考资料
+
+- `references/diary-format-convention.md` — 用户日记格式约定（极简一行一段，无分类无标签）
+- `references/file-classification-guide.md` — 文件分类归位指南（文件夹结构、判断标准、常见误区）
+- `references/vault-management-tips.md` — Vault 发现、配置同步、安全迁移、中文路径处理
+
+## 条件路由
+
+- 用户直接给文件路径 → 跳过"目标是什么？"询问，直接读取
+- 用户说"写进""写入""保存" → 直接执行 write_file，不再确认
+- 用户说"全部修复" → 修复待确认区所有项
+- 用户说"否""不修复" → 不写入待确认区修改
+- 用户重复问或重新提问题 → 先检查当前状态/文件/记录，再回答
